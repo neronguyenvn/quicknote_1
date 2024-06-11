@@ -1,5 +1,6 @@
 package com.localazy.quicknote
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -38,6 +39,7 @@ class FloatingService : Service() {
     /**
      * Create and show the foreground notification.
      */
+    @SuppressLint("LaunchActivityFromNotification")
     private fun showNotification() {
 
         val manager = NotificationManagerCompat.from(this)
@@ -94,13 +96,7 @@ class FloatingService : Service() {
             setWhen(System.currentTimeMillis())
             setSmallIcon(R.drawable.baseline_note_black_36)
             setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            addAction(
-                NotificationCompat.Action(
-                    0,
-                    getString(R.string.add_note),
-                    notePendingIntent
-                )
-            )
+            setContentIntent(notePendingIntent)
             addAction(
                 NotificationCompat.Action(
                     0,
@@ -130,11 +126,15 @@ class FloatingService : Service() {
 
         // Show the floating window for adding a new note.
         if (command == INTENT_COMMAND_NOTE) {
-            Toast.makeText(
-                this,
-                "Floating window to be added in the next lessons.",
-                Toast.LENGTH_SHORT
-            ).show()
+            if (!drawOverOtherAppsEnabled()) {
+                startPermissionActivity()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Floating window to be added in the next lessons.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
 
         return START_STICKY
