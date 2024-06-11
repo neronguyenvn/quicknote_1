@@ -9,9 +9,9 @@ import android.app.Service
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.localazy.quicknote.window.Window
 
 const val INTENT_COMMAND = "com.localazy.quicknote.COMMAND"
 const val INTENT_COMMAND_EXIT = "EXIT"
@@ -129,11 +129,8 @@ class FloatingService : Service() {
             if (!drawOverOtherAppsEnabled()) {
                 startPermissionActivity()
             } else {
-                Toast.makeText(
-                    this,
-                    "Floating window to be added in the next lessons.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                val window = Window(this)
+                window.open()
             }
         }
 
