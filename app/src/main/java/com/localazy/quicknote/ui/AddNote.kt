@@ -1,14 +1,14 @@
 package com.localazy.quicknote.ui
 
-import androidx.compose.foundation.Icon
-import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Button
-import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,10 +39,11 @@ fun AddNote(title: String, onNoteAdded: (String) -> Unit) {
             },
             modifier = Modifier
                 .padding(8.dp, 16.dp, 16.dp, 16.dp)
-                .gravity(Alignment.CenterVertically)
+                .align(Alignment.CenterVertically)
         ) {
             Icon(
-                asset = Icons.Filled.Add,
+                imageVector = Icons.Filled.Add,
+                contentDescription = "",
                 modifier = Modifier.size(24.dp)
             )
         }

@@ -8,9 +8,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.localazy.quicknote.AppDatabase
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+@OptIn(DelicateCoroutinesApi::class)
 class NotesViewModel(application: Application) : AndroidViewModel(application) {
 
     private val db = Room.databaseBuilder(
@@ -38,8 +40,7 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun removeNote(note: Note) {
-        notes = notes - listOf(note)
+        notes = notes - listOf(note).toSet()
         GlobalScope.launch { db.notes().delete(note) }
     }
-
 }
