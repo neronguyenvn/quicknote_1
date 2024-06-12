@@ -2,6 +2,7 @@ package com.localazy.quicknote.window
 
 import android.content.Context
 import android.graphics.PixelFormat
+import android.graphics.Point
 import android.os.Build
 import android.util.DisplayMetrics
 import android.view.Gravity
@@ -27,6 +28,7 @@ class Window(private val context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         } else {
+            @Suppress("DEPRECATION")
             WindowManager.LayoutParams.TYPE_PHONE
         },
         WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
@@ -65,11 +67,14 @@ class Window(private val context: Context) {
 
 
     private fun initWindow() {
-        // Using kotlin extension for views caused error, so good old findViewById is used
         binding.windowClose.setOnClickListener { close() }
         binding.contentButton.setOnClickListener {
             Toast.makeText(context, "Adding notes to be implemented.", Toast.LENGTH_SHORT).show()
         }
+        binding.windowHeader.registerDraggableTouchListener(
+            getInitialPosition = { Point(windowParams.x, windowParams.y) },
+            onViewMove = { setPosition(it) }
+        )
     }
 
 
@@ -88,13 +93,17 @@ class Window(private val context: Context) {
         }
     }
 
+    private fun close() {
+        windowManager.removeView(rootView)
+    }
 
-    fun close() {
-        try {
-            windowManager.removeView(rootView)
-        } catch (e: Exception) {
-            // Ignore exception for now, but in production, you should have some
-            // warning for the user here.
-        }
+    private fun setPosition(point: Point) {
+        windowParams.x = point.x
+        windowParams.y = point.y
+        update()
+    }
+
+    private fun update() {
+        windowManager.updateViewLayout(rootView, windowParams)
     }
 }

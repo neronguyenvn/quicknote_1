@@ -16,5 +16,4 @@ interface NotesDao {
 
     @Delete
     fun delete(note: Note)
-
 }

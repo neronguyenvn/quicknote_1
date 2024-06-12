@@ -5,9 +5,10 @@ import androidx.room.RoomDatabase
 import com.localazy.quicknote.notes.Note
 import com.localazy.quicknote.notes.NotesDao
 
-@Database(entities = arrayOf(Note::class), version = 1)
+@Database(
+    entities = [Note::class],
+    version = 1
+)
 abstract class AppDatabase : RoomDatabase() {
-
     abstract fun notes(): NotesDao
-
 }
