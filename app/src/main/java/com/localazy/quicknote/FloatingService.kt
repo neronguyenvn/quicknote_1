@@ -130,7 +130,7 @@ class FloatingService : Service() {
                 startPermissionActivity()
             } else {
                 val window = Window(this)
-                window.open()
+                window.show()
             }
         }
 

@@ -67,7 +67,7 @@ class Window(private val context: Context) {
 
 
     private fun initWindow() {
-        binding.windowClose.setOnClickListener { close() }
+        binding.windowClose.setOnClickListener { hide() }
         binding.contentButton.setOnClickListener {
             Toast.makeText(context, "Adding notes to be implemented.", Toast.LENGTH_SHORT).show()
         }
@@ -75,6 +75,9 @@ class Window(private val context: Context) {
             getInitialPosition = { Point(windowParams.x, windowParams.y) },
             onViewMove = { setPosition(it) }
         )
+        binding.root.setIsActiveListener { isActive ->
+            if (isActive) enableKeyboard() else disableKeyboard()
+        }
     }
 
 
@@ -84,16 +87,11 @@ class Window(private val context: Context) {
     }
 
 
-    fun open() {
-        try {
-            windowManager.addView(rootView, windowParams)
-        } catch (e: Exception) {
-            // Ignore exception for now, but in production, you should have some
-            // warning for the user here.
-        }
+    fun show() {
+        windowManager.addView(rootView, windowParams)
     }
 
-    private fun close() {
+    private fun hide() {
         windowManager.removeView(rootView)
     }
 
@@ -105,5 +103,20 @@ class Window(private val context: Context) {
 
     private fun update() {
         windowManager.updateViewLayout(rootView, windowParams)
+    }
+
+    private fun enableKeyboard() {
+        if (windowParams.flags and WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE != 0) {
+            windowParams.flags =
+                windowParams.flags and WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE.inv()
+            update()
+        }
+    }
+
+    private fun disableKeyboard() {
+        if (windowParams.flags and WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE == 0) {
+            windowParams.flags = windowParams.flags or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+            update()
+        }
     }
 }
