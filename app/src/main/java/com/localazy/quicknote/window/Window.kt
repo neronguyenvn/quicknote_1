@@ -8,17 +8,20 @@ import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.WindowManager
-import android.widget.Toast
+import android.widget.EditText
+import com.localazy.quicknote.R
 import com.localazy.quicknote.databinding.WindowBinding
+import com.localazy.quicknote.notes.NotesDb
 
 
-class Window(private val context: Context) {
+class Window(context: Context) {
 
     private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     private val layoutInflater =
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private val binding = WindowBinding.inflate(layoutInflater)
     private val rootView get() = binding.root
+    private val db = NotesDb(context)
 
     private val windowParams = WindowManager.LayoutParams(
         0,
@@ -69,7 +72,10 @@ class Window(private val context: Context) {
     private fun initWindow() {
         binding.windowClose.setOnClickListener { hide() }
         binding.contentButton.setOnClickListener {
-            Toast.makeText(context, "Adding notes to be implemented.", Toast.LENGTH_SHORT).show()
+            with(rootView.findViewById<EditText>(R.id.content_text)) {
+                db.insert(text.toString(), true)
+                setText("")
+            }
         }
         binding.windowHeader.registerDraggableTouchListener(
             getInitialPosition = { Point(windowParams.x, windowParams.y) },
